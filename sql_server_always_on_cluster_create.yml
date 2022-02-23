@@ -1,0 +1,48 @@
+---
+
+- name: prereqs
+  hosts: '*sql_first:*sql_other'
+  pre_tasks:
+    - name: set ip address of windows ad
+      set_fact:
+        dns_servers: "{{ hostvars['windows_ad_server']['ip_address'] }}"
+      when:
+        - "'windows_ad_server' in play_hosts"
+        - hostvars['windows_ad_server']['ip_address'] is defined
+  roles:
+    - oatakan.windows_cluster.join_domain
+    - oatakan.windows_cluster.failover_common
+    - oatakan.windows_sql_server.sql_users
+    - oatakan.windows_sql_server.install
+    - oatakan.windows_sql_server.alwayson_common
+
+- name: Create failover cluster on first node
+  hosts: '*sql_first'
+  roles:
+    - role: oatakan.windows_cluster.failover
+      first_node: true
+  post_tasks:
+    - name: set cluster_first node
+      add_host:
+        name: cluster_first
+        ip_address:  "{{ ansible_ip_addresses[0] | default(ansible_host) | default(ansible_ssh_host) }}"
+        ansible_hostname: "{{ ansible_hostname | default(ansible_host) | default(ansible_ssh_host) }}"
+
+- name: Join failover clusters on other nodes
+  hosts: '*sql_other'
+  roles:
+    - role: oatakan.windows_cluster.failover
+      first_node: false
+
+- name: Create sql server primary replica
+  hosts: '*sql_first'
+  roles:
+    - oatakan.windows_sql_server.ad_availability_group
+    - role: oatakan.windows_sql_server.alwayson
+      first_node: true
+
+- name: Create sql server secondary replica
+  hosts: '*sql_other'
+  roles:
+    - role: oatakan.windows_sql_server.alwayson
+      first_node: false

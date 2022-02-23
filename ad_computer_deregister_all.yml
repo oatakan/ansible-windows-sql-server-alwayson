@@ -1,0 +1,40 @@
+---
+
+- name: remove computer objects
+  hosts: '*sql_first:*sql_other'
+  gather_facts: true
+  serial: 1
+  pre_tasks:
+    - name: set ip address of windows ad
+      set_fact:
+        windows_ad_server_ip: "{{ hostvars['windows_ad_server']['ip_address'] }}"
+      when:
+        - "'windows_ad_server' in play_hosts"
+        - hostvars['windows_ad_server']['ip_address'] is defined
+  roles:
+    - role: oatakan.windows_cluster.ad_computer_registration
+      role_action: deregister
+      computer_name: "{{ ansible_hostname }}"
+      delegate_to: "{{ windows_ad_server_ip }}"
+      when: ansible_hostname is defined
+  post_tasks:
+    - block:
+        - name: ensure DNS record is removed if exists
+          win_shell: Get-DnsServerResourceRecord -ZoneName "{{ dns_domain_name }}" -Name "{{ ansible_hostname }}" | Remove-DnsServerResourceRecord -Force -ZoneName "{{ dns_domain_name }}"
+          register: remove_dns_record
+          failed_when: false
+          changed_when: remove_dns_record.rc == 0
+      delegate_to: '{{ windows_ad_server_ip }}'
+      vars:
+        ansible_user: "{{ domain_admin_username }}@{{ dns_domain_name }}"
+        ansible_password: "{{ domain_admin_password }}"
+
+- name: remove cluster object
+  hosts: '*sql_first:*sql_other'
+  gather_facts: false
+  roles:
+    - role: oatakan.windows_cluster.ad_computer_registration
+      role_action: deregister
+      computer_name: "{{ cluster_name }}"
+      delegate_to: "{{ windows_ad_server_ip }}"
+      run_once: true

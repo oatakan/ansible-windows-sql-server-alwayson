@@ -1,0 +1,23 @@
+---
+
+nodes:
+  - name: winnode1
+    role: sql_first
+    app_name: windows_sql_alwayson_demo
+    flavor: m1.medium
+    image: "{{ win_template_name|default('windows-2019-standard-core') }}"
+    key_name: ansible-oatakan
+    volume_size: 30
+    nics:
+      - net-name: private_network
+    os_type: windows
+  - name: winnode2
+    role: sql_other
+    app_name: windows_sql_alwayson_demo
+    flavor: m1.medium
+    image: "{{ win_template_name|default('windows-2019-standard-core') }}"
+    key_name: ansible-oatakan
+    volume_size: 30
+    nics:
+      - net-name: private_network
+    os_type: windows

@@ -1,0 +1,50 @@
+---
+providers:
+  vcenter:
+    datacenter: cloud
+    cluster: mylab
+    resource_pool: manageto
+
+nodes:
+  - name: winnode1
+    role: sql_first
+    app_name: windows_sql_alwayson_demo
+    networks:
+    - name: mgmt
+    domain: home.ad
+    memory: 6144
+    cpu: 2
+    template: "{{ win_template_name|default('windows-2019-standard-core') }}"
+    snapshot_src: Linked
+    linked_clone: True
+    customization:
+      autologon: True
+      autologoncount: 1
+      orgname: Ansible
+      fullname: Ansible
+      timezone: 20
+      password: '{{ ansible_password | default(ansible_ssh_password) }}'
+      runonce:
+      - powershell.exe -command "& $([scriptblock]::Create((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1'))) -ForceNewSSLCert -EnableCredSSP"
+      - winrm set winrm/config/service/auth @{CredSSP="true"}
+  - name: winnode2
+    role: sql_other
+    app_name: windows_sql_alwayson_demo
+    networks:
+    - name: mgmt
+    domain: home.ad
+    memory: 6144
+    cpu: 2
+    template: "{{ win_template_name|default('windows-2019-standard-core') }}"
+    snapshot_src: Linked
+    linked_clone: True
+    customization:
+      autologon: True
+      autologoncount: 1
+      orgname: Ansible
+      fullname: Ansible
+      timezone: 20
+      password: '{{ ansible_password | default(ansible_ssh_password) }}'
+      runonce:
+      - powershell.exe -command "& $([scriptblock]::Create((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1'))) -ForceNewSSLCert -EnableCredSSP"
+      - winrm set winrm/config/service/auth @{CredSSP="true"}

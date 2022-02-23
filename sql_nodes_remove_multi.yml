@@ -1,0 +1,17 @@
+---
+
+- name: remove servers
+  hosts: all
+  gather_facts: False
+  connection: local
+  become: false
+  vars:
+    provider: vmware
+  vars_files:
+    - node-config/sql-nodes-{{ provider }}.yml
+
+  roles:
+    - role: ansible-role-{{ provider }}
+      role_action: deprovision
+      delegate_to: localhost
+      run_once: true

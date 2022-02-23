@@ -1,0 +1,25 @@
+---
+
+nodes:
+  - name: winnode1
+    role: sql_first
+    app_name: windows_sql_alwayson_demo
+    instance_type: t2.large
+    image: ami-603b1c1a #windows 2016
+    volumes:
+      - device_name: /dev/xvda
+        volume_type: gp2
+        volume_size: 50
+        delete_on_termination: true
+    user_data: "{{ lookup('template', 'templates/userdata.txt.j2') }}"
+  - name: winnode2
+    role: sql_other
+    app_name: windows_sql_alwayson_demo
+    instance_type: t2.large
+    image: ami-603b1c1a #windows 2016
+    volumes:
+      - device_name: /dev/xvda
+        volume_type: gp2
+        volume_size: 50
+        delete_on_termination: true
+    user_data: "{{ lookup('template', 'templates/userdata.txt.j2') }}"

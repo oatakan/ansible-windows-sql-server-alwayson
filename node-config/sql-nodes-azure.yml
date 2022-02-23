@@ -1,0 +1,23 @@
+---
+
+nodes:
+  - name: winnode1
+    role: sql_first
+    app_name: windows_sql_alwayson_demo
+    vm_size: Standard_D2s_v3
+    os_type: Windows
+    image:
+      sku: 2019-Datacenter-Core-smalldisk
+      publisher: MicrosoftWindowsServer
+      version: latest
+      offer: WindowsServer
+  - name: winnode2
+    role: sql_other
+    app_name: windows_sql_alwayson_demo
+    vm_size: Standard_D2s_v3
+    os_type: Windows
+    image:
+      sku: "{{ win2019_image_sku|default('2019-Datacenter-Core-smalldisk') }}"
+      publisher: MicrosoftWindowsServer
+      version: latest
+      offer: WindowsServer
