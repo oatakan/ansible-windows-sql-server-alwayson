@@ -5,7 +5,7 @@ nodes:
     role: sql_first
     app_name: windows_sql_alwayson_demo
     domain: home.ad
-    memory: 4096
+    memory: 6144
     cpu: 2
     ports:
       - port: 1433
@@ -15,9 +15,9 @@ nodes:
     role: sql_other
     app_name: windows_sql_alwayson_demo
     domain: home.ad
-    memory: 4096
+    memory: 6144
     cpu: 2
     ports:
-      - port: 80
+      - port: 1433
     user_name: vagrant
     template: "{{ win_template_name|default('windows-2019-standard-core') }}"
