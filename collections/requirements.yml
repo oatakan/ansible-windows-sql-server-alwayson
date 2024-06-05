@@ -6,3 +6,4 @@ collections:
   - name: community.vmware
   - name: oatakan.windows_cluster
   - name: oatakan.windows_sql_server
+  - name: microsoft.ad
