@@ -7,6 +7,3 @@ It includes the following playbooks:
    - sql_nodes_infra_multi.yml  # provision infrastructure
    - sql_nodes_remove_multi  # remove infrastructure
    - sql-server-alwayson-cluster-create.yml # create SQL Server AlwaysOn cluster
-
-
-

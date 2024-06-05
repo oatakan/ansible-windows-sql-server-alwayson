@@ -1,4 +1,5 @@
 ---
+
 providers:
   ovirt:
     cluster: production
@@ -9,26 +10,26 @@ nodes:
     app_name: windows_sql_alwayson_demo
     environment: dev
     networks:
-    - name: ovirtmgmt
+      - name: ovirtmgmt
     domain: home.ad
     memory: 6144
     cpu: 2
     type: server
     user_name: vagrant
     template: "{{ win_template_name|default('windows-2019-standard-core') }}"
-    sysprep: yes
+    sysprep: true
     ansible_port: 5986
   - name: winnode2
     role: sql_other
     app_name: windows_sql_alwayson_demo
     environment: dev
     networks:
-    - name: ovirtmgmt
+      - name: ovirtmgmt
     domain: home.ad
     memory: 6144
     cpu: 2
     type: server
     user_name: vagrant
     template: "{{ win_template_name|default('windows-2019-standard-core') }}"
-    sysprep: yes
+    sysprep: true
     ansible_port: 5986

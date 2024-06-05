@@ -5,7 +5,7 @@ nodes:
     role: sql_first
     app_name: windows_sql_alwayson_demo
     instance_type: t2.large
-    image: ami-603b1c1a #windows 2016
+    image: ami-603b1c1a # windows 2016
     volumes:
       - device_name: /dev/xvda
         volume_type: gp2
@@ -16,7 +16,7 @@ nodes:
     role: sql_other
     app_name: windows_sql_alwayson_demo
     instance_type: t2.large
-    image: ami-603b1c1a #windows 2016
+    image: ami-603b1c1a # windows 2016
     volumes:
       - device_name: /dev/xvda
         volume_type: gp2

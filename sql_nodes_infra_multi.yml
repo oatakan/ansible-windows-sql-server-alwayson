@@ -1,6 +1,6 @@
 ---
-
-- hosts: localhost
+- name: provision sql nodes
+  hosts: localhost
   become: false
   vars:
     provider: vmware
@@ -8,7 +8,7 @@
     - node-config/sql-nodes-{{ provider }}.yml
   pre_tasks:
     - name: get amis on ec2
-      include_role:
+      ansible.builtin.include_role:
         name: ec2-find-amis
       when: provider == 'ec2'
   roles:
